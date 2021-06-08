@@ -1,26 +1,55 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from "react-router-dom"
+import { Button, Collapse } from 'react-bootstrap';
 
 
 const NavBar = () => {
+    const [open, setOpen] = useState(false)
+
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
                 <Link className="navbar-brand" to="/">BestBidder</Link>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               
+                <Button
+                    onClick={() => setOpen(!open)}
+                    className="navbar-toggler"
+                    aria-controls="navbarCollapse"
+                    aria-expanded={open}
+                >
                     <span className="navbar-toggler-icon"></span>
-                </button>
-
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav mr-auto">
-                        <li className="nav-item active">
-                            <Link className="nav-link" to="/">Accueil </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/">Mon compte</Link>
-                        </li>
-                    </ul>
-                </div>
+                </Button>
+                <Collapse in={open}>
+                    <div className="collapse navbar-collapse" id="navbarCollapse">
+                        <ul className="navbar-nav mr-auto" id="navbar-content">
+                            <li className="nav-item active">
+                                <Link className="nav-link" to="#">Se connecter <span className="sr-only">(current)</span></Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">S'inscrire</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">Toutes les enchères</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">Afficher par catégorie</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">Acheter des Bb's</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">Mode d'emploi</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">CGU, CGV et Mentions légales</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">Contactez-nous</Link>
+                            </li>
+                        </ul>
+                    </div>
+                </Collapse>
+                
             </nav>
         </div>
     )

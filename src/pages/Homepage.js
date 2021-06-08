@@ -1,10 +1,11 @@
 import React from 'react'
+import Auctions from '../components/Auctions'
 
 const Homepage = () => {
     return ( 
-        <>
-            Homepage
-        </> 
+             <div className="container">
+                <Auctions />
+            </div>
     )
 }
 
