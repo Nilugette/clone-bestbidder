@@ -1,59 +1,190 @@
-import React from 'react'
+import React, { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-// import CheckButton from "react-validation/build/button";
-// import { isEmail } from "validator";
+import CheckButton from "react-validation/build/button";
+import { isEmail } from "validator";
+import { register } from "../redux/authentication/auth.action";
+
+
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
+};
+
+const validEmail = (value) => {
+  if (!isEmail(value)) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This is not a valid email.
+      </div>
+    );
+  }
+};
+
+const vphone = (value) => {
+  const metropolitanFranceReg = new RegExp(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/)
+  if (!(value.match(metropolitanFranceReg)) ) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        The mobile number is not correct
+      </div>
+    );
+  }
+};
+
+const vnickname = (value) => {
+  if (value.length < 3 || value.length > 20) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        The username must be between 3 and 20 characters.
+      </div>
+    );
+  }
+};
+
+const vpassword = (value) => {
+  if (value.length < 8 || value.length > 40) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        The password must be between 8 and 40 characters.
+      </div>
+    );
+  }
+};
 
 const Register = () => {
-    return ( 
-        <div className="container">
-            <div className="col-md-12">
-                <div className="card-container">
-                    <Form >
-                        <div className="form-group">
-                            <label htmlFor="email">Indiquez votre email</label>
-                            <Input
-                                type="text"
-                                className="form-control"
-                                name="email"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="phone">Indiquez votre numéro de mobile</label>
-                            <Input
-                                type="tel"
-                                className="form-control"
-                                name="phone"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="username">Indiquez votre pseudo *</label>
-                            <Input
-                                type="text"
-                                className="form-control"
-                                name="username"
-                            />
-                        </div>
+  const form = useRef();
+  const checkBtn = useRef();
 
-                        <div className="form-group">
-                            <label htmlFor="password">Créez votre mot de passe (mini 8 car.)*</label>
-                            <Input
-                                type="password"
-                                className="form-control"
-                                name="password"
-        
-                            />
-                        </div>
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("")
+  const [successful, setSuccessful] = useState(false);
 
-                        <div className="form-group">
-                            <button className="btn btn-primary btn-block">Je m'inscris</button>
-                        </div>
-                    </Form>
-                </div>
+  const { message } = useSelector(state => state.message);
+  const dispatch = useDispatch();
+
+  const onChangeNickname = (e) => {
+    const nickname = e.target.value;
+    setNickname(nickname);
+  };
+
+  const onChangeEmail = (e) => {
+    const email = e.target.value;
+    setEmail(email);
+  };
+
+  const onChangePhone = (e) => {
+    const phone = e.target.value;
+    setPhone(phone);
+  };
+
+  const onChangePassword = (e) => {
+    const password = e.target.value;
+    setPassword(password);
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    setSuccessful(false);
+
+    form.current.validateAll();
+
+    if (checkBtn.current.context._errors.length === 0) {
+      dispatch(register(email, nickname, password, phone))
+        .then(() => {
+          setSuccessful(true);
+        })
+        .catch(() => {
+          setSuccessful(false);
+        });
+    }
+  };
+
+  return (
+
+
+    <div className="col-md-12">
+      <div className="card-container">
+
+        <Form onSubmit={handleRegister} ref={form}>
+          {!successful && (
+            <div>
+              <div className="form-group">
+                <label htmlFor="nickname">Username</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="nickname"
+                  value={nickname}
+                  onChange={onChangeNickname}
+                  validations={[required, vnickname]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="phone"
+                  value={phone}
+                  onChange={onChangePhone}
+                  validations={[required, vphone]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                  validations={[required, validEmail]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <Input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  validations={[required, vpassword]}
+                />
+              </div>
+
+              <div className="form-group">
+                <button className="btn btn-primary btn-block">Sign Up</button>
+              </div>
             </div>
-        </div>
-    )
-}
+          )}
 
-export default Register
+          {message && (
+            <div className="form-group">
+              <div className={ successful ? "alert alert-success" : "alert alert-danger" } role="alert">
+                {message}
+              </div>
+            </div>
+          )}
+          <CheckButton style={{ display: "none" }} ref={checkBtn} />
+        </Form>
+      </div>
+    </div>
+  );
+};
+
+export default Register;

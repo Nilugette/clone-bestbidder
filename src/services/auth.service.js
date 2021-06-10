@@ -7,7 +7,9 @@ const register = (email, nickname, password, phone) => {
     email,
     nickname,
     password,
-    phone
+    phone,
+    optin_email: true,
+    optin_sms: true
   });
 };
 
@@ -21,9 +23,8 @@ const login = (username, password) => {
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-      console.log(response.data)
+
       return response.data;
-      
     });
 };
 
