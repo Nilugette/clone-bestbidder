@@ -1,10 +1,20 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom"
 import { Button, Collapse } from 'react-bootstrap';
+import { logout } from '../redux/authentication/auth.action';
 
 
 const NavBar = () => {
     const [open, setOpen] = useState(false)
+
+    const { user: currentUser } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+
+    const logOut = () => {
+        dispatch(logout());
+      };
+    
 
     return (
         <div>
@@ -22,9 +32,15 @@ const NavBar = () => {
                 <Collapse in={open}>
                     <div className="collapse navbar-collapse" id="navbarCollapse">
                         <ul className="navbar-nav mr-auto" id="navbar-content">
-                            <li className="nav-item active">
-                                <Link className="nav-link" to="/auth/connexion">Se connecter <span className="sr-only">(current)</span></Link>
-                            </li>
+                            {!currentUser ? (
+                                <li className="nav-item active">
+                                    <Link className="nav-link" to="/auth/connexion">Se connecter <span className="sr-only">(current)</span></Link>
+                                </li>
+                            ) : (
+                                <li className="nav-item active">
+                                    <Link className="nav-link" to="/auth/connexion"  onClick={logOut}>Logout <span className="sr-only">(current)</span></Link>
+                                </li>
+                            )}
                             <li className="nav-item">
                                 <Link className="nav-link" to="/auth/inscription">S'inscrire</Link>
                             </li>
