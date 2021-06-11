@@ -29,7 +29,6 @@ const validEmail = (value) => {
 };
 
 const vphone = (value) => {
-  value = value.replace(/[\.,\s]/g, '');
   if (!(value.match(/^(\+33|0033|0)(6|7)[0-9]{8}$/g) && value !== '') ) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -84,15 +83,7 @@ const Register = (props) => {
 
   const onChangePhone = (e) => {
     const phone = e.target.value;
-    let cleaned = ('' + phone).replace(/\D/g, '')
-    let matchPhone = cleaned.match(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/);
-    
-    if(matchPhone || matchPhone === '') {
-      let replaceZero = matchPhone.toString().replace(/^0+/g, '')
-      let intlCode = (matchPhone[1] ? '0' : '+33');
-      let formatPhone = [intlCode, replaceZero].join('');
-      setPhone(formatPhone);
-    }
+    setPhone(phone);   
   };
 
   const onChangePassword = (e) => {
