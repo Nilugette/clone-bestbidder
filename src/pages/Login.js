@@ -68,7 +68,7 @@ const Login = (props) => {
 
   return (
     <div className="col-md-12">
-      <div className="card card-container">
+      <div className="card-container">
 
         <Form onSubmit={handleLogin} ref={form}>
           <div className="form-group">

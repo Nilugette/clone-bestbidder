@@ -29,8 +29,8 @@ const validEmail = (value) => {
 };
 
 const vphone = (value) => {
-  const metropolitanFranceReg = new RegExp(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/)
-  if (!(value.match(metropolitanFranceReg)) ) {
+  value = value.replace(/[\.,\s]/g, '');
+  if (!(value.match(/^(\+33|0033|0)(6|7)[0-9]{8}$/g) && value !== '') ) {
     return (
       <div className="alert alert-danger" role="alert">
         The mobile number is not correct
@@ -59,7 +59,7 @@ const vpassword = (value) => {
   }
 };
 
-const Register = () => {
+const Register = (props) => {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -84,7 +84,15 @@ const Register = () => {
 
   const onChangePhone = (e) => {
     const phone = e.target.value;
-    setPhone(phone);
+    let cleaned = ('' + phone).replace(/\D/g, '')
+    let matchPhone = cleaned.match(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/);
+    
+    if(matchPhone || matchPhone === '') {
+      let replaceZero = matchPhone.toString().replace(/^0+/g, '')
+      let intlCode = (matchPhone[1] ? '0' : '+33');
+      let formatPhone = [intlCode, replaceZero].join('');
+      setPhone(formatPhone);
+    }
   };
 
   const onChangePassword = (e) => {
@@ -103,6 +111,8 @@ const Register = () => {
       dispatch(register(email, nickname, password, phone))
         .then(() => {
           setSuccessful(true);
+          props.history.push("/");
+          window.location.reload();
         })
         .catch(() => {
           setSuccessful(false);
