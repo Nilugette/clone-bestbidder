@@ -9,12 +9,6 @@ const NavBar = () => {
     const [open, setOpen] = useState(false)
 
     const { user: currentUser } = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
-
-    const logOut = () => {
-        dispatch(logout());
-      };
-    
 
     return (
         <div>
@@ -38,7 +32,7 @@ const NavBar = () => {
                                 </li>
                             ) : (
                                 <li className="nav-item active">
-                                    <Link className="nav-link" to="/auth/connexion"  onClick={logOut}>Logout <span className="sr-only">(current)</span></Link>
+                                    <Link className="nav-link" to="/mon-compte">Mon Compte<span className="sr-only">(current)</span></Link>
                                 </li>
                             )}
                             <li className="nav-item">

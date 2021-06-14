@@ -3,6 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk"
 import rootReducer from "./root-reducer"
 import { getAuctions } from "./auction/auction.action"
+import { getAccount } from './account/account.action';
 
 
 const middleware = [thunk];
@@ -14,5 +15,6 @@ const store = createStore(
 
 
 store.dispatch(getAuctions())
+store.dispatch(getAccount())
 
 export default store 
