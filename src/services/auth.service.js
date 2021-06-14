@@ -5,16 +5,11 @@ const API_URL = "https://dnayywv457.execute-api.eu-west-3.amazonaws.com/developm
 
 const register = (email, nickname, password, phone) => {
 
-  let cleaned = ('' + phone).replace(/\D/g, '')
-  let matchPhone = cleaned.match(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/);
-  let replaceZero = matchPhone.toString().replace(/^0+/g, '')
-  let intlCode = (matchPhone[1] ? '0' : '+33');
-  let formatPhone = [intlCode, replaceZero].join('');
   return axios.post(API_URL + "register", {
     email,
     nickname,
     password,
-    phone: formatPhone,
+    phone: formatPhone(phone),
     optin_email: true,
     optin_sms: true
   });
@@ -59,6 +54,18 @@ const refreshToken = (refresh) => {
 const isExpired = (timestamp) => {
   const isExpiredToken = new Date(timestamp*1000)
   return isExpiredToken.setMinutes( isExpiredToken.getMinutes() + 30 );
+}
+
+const formatPhone = (phone) => {
+  let cleaned = ('' + phone).replace(/\D/g, '');
+  let matchPhone = cleaned.match(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/);
+  
+  if (matchPhone) {
+    let replaceZero = matchPhone.toString().replace(/^0+/g, '')
+    let intlCode = (matchPhone[1] ? '0' : '+33');
+    return [intlCode, replaceZero].join('');
+  }
+  return null;
 }
 
 const logout = () => {
