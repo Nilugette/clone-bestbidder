@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const API_URL = "https://dnayywv457.execute-api.eu-west-3.amazonaws.com/development/";
 
@@ -26,6 +27,27 @@ const login = (username, password) => {
       password,
     })
     .then((response) => {
+      
+      if (response.data.jwt) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+
+        const decodeToken = jwt_decode(response.data.jwt)
+
+        if(isExpired(decodeToken.exp)) {
+          refreshToken(response.data.ref)
+        }
+      }
+
+      return response.data;
+    });
+};
+
+const refreshToken = (refresh) => {
+  return axios
+    .post(API_URL + "refresh", {
+      token: refresh
+    })
+    .then((response) => {
       if (response.data.jwt) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
@@ -33,6 +55,11 @@ const login = (username, password) => {
       return response.data;
     });
 };
+
+const isExpired = (timestamp) => {
+  const isExpiredToken = new Date(timestamp*1000)
+  return isExpiredToken.setMinutes( isExpiredToken.getMinutes() + 30 );
+}
 
 const logout = () => {
   localStorage.removeItem("user");
@@ -42,4 +69,5 @@ export default {
   register,
   login,
   logout,
+  refreshToken
 };
