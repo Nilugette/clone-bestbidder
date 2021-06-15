@@ -10,9 +10,9 @@ const MyAccount = () => {
     const [editCountry, setEditCountry] = useState(account.country)
     const [editLastName, setEditLastName] = useState(account.last_name)
     const [editCity, setEditCity] = useState(account.city)
-    const [editCivility, setEditCivility] = useState(account.civility)
+    const [editCivility, setEditCivility] = useState("Mme")
     const [editZipCode, setEditZipCode] = useState(account.zip_code)
-
+    const [editBirthdate, setEditBirthdate] = useState(account.birthdate)
     const [editAddress, setEditAddress] = useState(account.address)
     const [editAddress2, setEditAddress2] = useState(account.address_2)
     const [editNotifEmail, setEditNotifEmail] = useState(false)
@@ -40,8 +40,8 @@ const MyAccount = () => {
             last_name: editLastName,
             city: editCity,
             civility: editCivility,
-            zip_code: editZipCode,
-            bithdate: account.bithdate,
+            zip_code: parseInt(editZipCode),
+            bithdate: editBirthdate + "T00:00:00.000Z",
             address: editAddress,
             address_2: editAddress2,
             notifEmail: editNotifEmail,
@@ -67,17 +67,17 @@ const MyAccount = () => {
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputEmail">Votre email</label>
-                        <input type="email" className="form-control" id="inputEmail" value={account.email} name="email" />
+                        <input type="email" className="form-control" id="inputEmail" defaultValue={account.email} name="email" />
                     </div>
                     <div className="form-group col-md-6">
                         <label htmlFor="inputNickname">Votre pseudo</label>
-                        <input type="text" className="form-control" id="inputNickname" value={account.nickname} name="nickname" />
+                        <input type="text" className="form-control" id="inputNickname" defaultValue={account.nickname} name="nickname" />
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputMobile">Votre n° de mobile</label>
-                        <input type="tel" className="form-control" id="inputMobile" value={account.phone} name="phone"/>
+                        <input type="tel" className="form-control" id="inputMobile" defaultValue={account.phone} name="phone"/>
                     </div>
                     <div className="form-group col-md-6">
                         <label htmlFor="inputFirstName">Votre prénom</label>
@@ -86,7 +86,7 @@ const MyAccount = () => {
                             className="form-control" 
                             id="inputFirstName" 
                             name="first_name" 
-                            value={account.first_name}
+                            defaultValue={account.first_name}
                             onChange={ e => setEditFirstName(e.target.value)} />
                     </div>
                 </div>
@@ -98,7 +98,7 @@ const MyAccount = () => {
                             className="form-control" 
                             id="inputCountry" 
                             name="country"
-                            value={account.country}
+                            defaultValue={account.country}
                             onChange={ e => setEditCountry(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
@@ -108,7 +108,7 @@ const MyAccount = () => {
                             className="form-control" 
                             id="inputLastName" 
                             name="last_name" 
-                            value={account.last_name}
+                            defaultValue={account.last_name}
                             onChange={ e => setEditLastName(e.target.value)} />
                     </div>
                 </div>
@@ -119,20 +119,16 @@ const MyAccount = () => {
                             type="text" 
                             className="form-control" 
                             id="inputCity" name="city" 
-                            value={account.city} 
+                            defaultValue={account.city} 
                             onChange={ e =>setEditCity(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
-                         {/** 
-                            TO DO :
-                            Doesn't work
-                         **/} 
                         <label htmlFor="inputTitle">Votre Civilité</label>
                         <select 
                             id="inputTitle" 
                             className="form-control" 
                             name="civility"
-                            value={account.civility}
+                            defaultValue={account.civility}
                             onChange={ e =>setEditCivility(e.target.value)} >
                                 <option value="Mme">Mme</option>
                                 <option value="M.">M.</option>
@@ -140,6 +136,9 @@ const MyAccount = () => {
                     </div>
                 </div>
                 <div className="form-row">
+                        {/** 
+                            Doesn't work even on Postman, the value is patched but not retrieve in the GET payload
+                         **/} 
                     <div className="form-group col-md-6">
                         <label htmlFor="inputZip">Votre code postal</label>
                         <input 
@@ -147,16 +146,21 @@ const MyAccount = () => {
                             className="form-control" 
                             id="inputZip" 
                             name="zip_code"
-                            value={account.zip_code}
+                            defaultValue={account.zip_code}
                             onChange={ e => setEditZipCode(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
-                         {/** 
-                            TO DO :
-                            Handle Date format
+                        {/** 
+                            Via Postman, birthdate sent and received in specific format, mine is sent but not retrieve
                          **/} 
                         <label htmlFor="inputBirthDate">Votre date de naissance</label>
-                        <input type="date" className="form-control" id="inputBirthDate" name="bithdate"  />
+                        <input 
+                        type="date" 
+                        className="form-control" 
+                        id="inputBirthDate" 
+                        name="birthdate" 
+                        defaultValue={account.birthdate}
+                        onChange={ e => setEditBirthdate(e.target.value)} />
                     </div>
                 </div>
                 <div className="form-row">
@@ -167,7 +171,7 @@ const MyAccount = () => {
                             className="form-control" 
                             id="inputAddress" 
                             name="address"
-                            value={account.address}
+                            defaultValue={account.address}
                             onChange={ e => setEditAddress(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
@@ -187,16 +191,15 @@ const MyAccount = () => {
                         className="form-control" 
                         id="inputAddressDetail" 
                         name="address_2"
-                        value={account.address_2}
+                        defaultValue={account.address_2}
                         onChange={ e => setEditAddress2(e.target.value)} />
                     </div>
                 </div>
                 <div className="form-group">
+                    {/** 
+                        Doesn't work even on Postman, the value is patched but not retrieve in the GET payload
+                     **/} 
                     <div className="form-check">
-                         {/** 
-                            TO DO :
-                            Doesn't work
-                         **/} 
                         <input 
                             className="form-check-input" 
                             type="checkbox" 
@@ -211,11 +214,10 @@ const MyAccount = () => {
                     </div>
                 </div>
                 <div className="form-group">
+                    {/** 
+                        Doesn't work even on Postman, the value is patched but not retrieve in the GET payload
+                    **/} 
                     <div className="form-check">
-                         {/** 
-                            TO DO :
-                            Doesn't work
-                         **/} 
                         <input 
                             className="form-check-input" 
                             type="checkbox" 
