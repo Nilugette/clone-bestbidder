@@ -1,12 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom"
+import { patchAccount } from "../redux/account/account.action";
 import { logout } from '../redux/authentication/auth.action';
 
 const MyAccount = () => {
     const account = useSelector(state => state.accountReducer)
+    const [editFirstName, setEditFirstName] = useState(account.first_name)
+    const [editCountry, setEditCountry] = useState(account.country)
+    const [editLastName, setEditLastName] = useState(account.last_name)
+    const [editCity, setEditCity] = useState(account.city)
+    const [editCivility, setEditCivility] = useState(account.civility)
+    const [editZipCode, setEditZipCode] = useState(account.zip_code)
+
+    const [editAddress, setEditAddress] = useState(account.address)
+    const [editAddress2, setEditAddress2] = useState(account.address_2)
+    const [editNotifEmail, setEditNotifEmail] = useState(false)
+    const [editNotifSMS, setEditNotifSMS] = useState(false)
 
     const dispatch = useDispatch();
+
+    const handlePatchAccount = async (e) => {
+        e.preventDefault() 
+        const patchAccountData = {
+            bb: account.bb,
+            email: account.email,
+            email_validate: account.email_validate,
+            id: account.id,
+            nickname: account.nickname,
+            optin_email: account.optin_email,
+            optin_sms: account.optin_sms,
+            phone: account.phone,
+            phone_validate: account.phone_validate,
+            total_auction: account.total_auction,
+            total_buy: account.total_buy,
+            total_waiting_action: account.total_waiting_action,
+            first_name: editFirstName,
+            country: editCountry,
+            last_name: editLastName,
+            city: editCity,
+            civility: editCivility,
+            zip_code: editZipCode,
+            bithdate: account.bithdate,
+            address: editAddress,
+            address_2: editAddress2,
+            notifEmail: editNotifEmail,
+            notifSMS: editNotifSMS
+        }
+        dispatch(patchAccount(patchAccountData))
+      }
 
     const logOut = () => {
       dispatch(logout());
@@ -21,66 +63,118 @@ const MyAccount = () => {
                 <h3>Complétez ou modifiez vos informations</h3>
             </header>
 
-            <form>
+            <form  onSubmit={e => handlePatchAccount(e)}>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputEmail">Votre email</label>
-                        <input type="email" className="form-control" id="inputEmail" value={account.email}/>
+                        <input type="email" className="form-control" id="inputEmail" value={account.email} name="email" />
                     </div>
                     <div className="form-group col-md-6">
                         <label htmlFor="inputNickname">Votre pseudo</label>
-                        <input type="text" className="form-control" id="inputNickname" value={account.nickname}/>
+                        <input type="text" className="form-control" id="inputNickname" value={account.nickname} name="nickname" />
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputMobile">Votre n° de mobile</label>
-                        <input type="tel" className="form-control" id="inputMobile" value={account.phone} />
+                        <input type="tel" className="form-control" id="inputMobile" value={account.phone} name="phone"/>
                     </div>
                     <div className="form-group col-md-6">
                         <label htmlFor="inputFirstName">Votre prénom</label>
-                        <input type="text" className="form-control" id="inputFirstName" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="inputFirstName" 
+                            name="first_name" 
+                            value={account.first_name}
+                            onChange={ e => setEditFirstName(e.target.value)} />
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputCountry">Votre pays</label>
-                        <input type="text" className="form-control" id="inputCountry" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="inputCountry" 
+                            name="country"
+                            value={account.country}
+                            onChange={ e => setEditCountry(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
                         <label htmlFor="inputLastName">Votre nom</label>
-                        <input type="text" className="form-control" id="inputLastName" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="inputLastName" 
+                            name="last_name" 
+                            value={account.last_name}
+                            onChange={ e => setEditLastName(e.target.value)} />
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputCity">Votre ville</label>
-                        <input type="text" className="form-control" id="inputCity" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="inputCity" name="city" 
+                            value={account.city} 
+                            onChange={ e =>setEditCity(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
-                        <label for="inputTitle">Votre Civilité</label>
-                        <select id="inputTitle" class="form-control">
-                            <option selected>Mme</option>
-                            <option>M.</option>
+                         {/** 
+                            TO DO :
+                            Doesn't work
+                         **/} 
+                        <label htmlFor="inputTitle">Votre Civilité</label>
+                        <select 
+                            id="inputTitle" 
+                            className="form-control" 
+                            name="civility"
+                            value={account.civility}
+                            onChange={ e =>setEditCivility(e.target.value)} >
+                                <option value="Mme">Mme</option>
+                                <option value="M.">M.</option>
                         </select>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputZip">Votre code postal</label>
-                        <input type="text" className="form-control" id="inputZip" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="inputZip" 
+                            name="zip_code"
+                            value={account.zip_code}
+                            onChange={ e => setEditZipCode(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
+                         {/** 
+                            TO DO :
+                            Handle Date format
+                         **/} 
                         <label htmlFor="inputBirthDate">Votre date de naissance</label>
-                        <input type="date" className="form-control" id="inputBirthDate" />
+                        <input type="date" className="form-control" id="inputBirthDate" name="bithdate"  />
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputAddress">Votre adresse</label>
-                        <input type="text" className="form-control" id="inputAddress" />
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="inputAddress" 
+                            name="address"
+                            value={account.address}
+                            onChange={ e => setEditAddress(e.target.value)} />
                     </div>
                     <div className="form-group col-md-6">
+                        {/** 
+                            TO DO :
+                            Add a link to a new form to change password
+                        **/} 
                         <label htmlFor="inputChangePassword">Mot de Passe</label>
                         <input type="submit" className="form-control btn btn-warning" id="inputChangePassword" value="Changer" />
                     </div>
@@ -88,13 +182,60 @@ const MyAccount = () => {
                 <div className="form-row">
                     <div className="form-group col-md-6">
                         <label htmlFor="inputAddressDetail">Complément d'adresse</label>
-                        <input type="text" className="form-control" id="inputAddressDetail" />
+                        <input 
+                        type="text" 
+                        className="form-control" 
+                        id="inputAddressDetail" 
+                        name="address_2"
+                        value={account.address_2}
+                        onChange={ e => setEditAddress2(e.target.value)} />
                     </div>
                 </div>
-            
-                <button type="submit" className="btn btn-warning">Je modifie</button>
+                <div className="form-group">
+                    <div className="form-check">
+                         {/** 
+                            TO DO :
+                            Doesn't work
+                         **/} 
+                        <input 
+                            className="form-check-input" 
+                            type="checkbox" 
+                            id="gridCheck" 
+                            name="notifEmail" 
+                            value={account.notifEmail}
+                            checked={editNotifEmail}
+                            onChange={e => setEditNotifEmail(!editNotifEmail)}/>
+                        <label className="form-check-label" htmlFor="gridCheck">
+                            Je souhaite être informé par email de l'actualité de Bestbidder (nouvelles enchères, évènements...)
+                        </label>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <div className="form-check">
+                         {/** 
+                            TO DO :
+                            Doesn't work
+                         **/} 
+                        <input 
+                            className="form-check-input" 
+                            type="checkbox" 
+                            id="gridCheck" 
+                            name="notifSMS"
+                            value={account.notifSMS}
+                            checked={editNotifSMS}
+                            onChange={e => setEditNotifSMS(!editNotifSMS)} />
+                        <label className="form-check-label" htmlFor="gridCheck">
+                            Je souhaite recevoir des notification par SMS de Bestbidder
+                        </label>
+                    </div>
+                </div>
+                <div className="text-center">
+                    <button type="submit" className="btn btn-warning">Je modifie</button>
+                </div>
+                
             </form>
-        <Link className="nav-link btn btn-secondary w-25" to="/auth/connexion"  onClick={logOut}>Se déconnecter</Link>
+            <br/>
+                <Link className="nav-link btn btn-secondary" to="/auth/connexion"  onClick={logOut}>Se déconnecter</Link>
         </div>
     );
 };

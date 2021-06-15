@@ -1,7 +1,6 @@
 import axios from "axios";
+import API_URL from "../api/constant";
 import authHeader from "./auth-header";
-
-const API_URL = "https://dnayywv457.execute-api.eu-west-3.amazonaws.com/development/";
 
 const getPublicContent = () => {
     return axios.get(API_URL + "all");

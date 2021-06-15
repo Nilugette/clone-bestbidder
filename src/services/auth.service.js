@@ -1,7 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-
-const API_URL = "https://dnayywv457.execute-api.eu-west-3.amazonaws.com/development/";
+import API_URL from "../api/constant";
 
 const register = (email, nickname, password, phone) => {
 

@@ -3,7 +3,7 @@ import React from "react";
 const Card = ({ auction }) => {
   return (
       <div className="card" style={{width: "18rem"}}>
-        <img className="card-img-top" src={auction.images} alt="Card cap" />
+        <img className="card-img-top auction-img" src={auction.images} alt="Card cap" ></img>
         <div className="card-body">
           <div className="price">
             <p> 1<span>€00</span></p>

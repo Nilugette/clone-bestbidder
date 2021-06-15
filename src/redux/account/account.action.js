@@ -1,13 +1,29 @@
 import axios from 'axios'
+import API_URL from '../../api/constant'
 import authHeader from '../../services/auth-header'
 import AccountActionTypes from './account.types'
 
 export const getAccount = () => {
     return (dispatch) => {
-        return axios.get('https://dnayywv457.execute-api.eu-west-3.amazonaws.com/development/account',  { headers: authHeader() })
+        return axios.get(API_URL + "account",  { headers: authHeader() })
                     .then( (res) => {
                         dispatch({ type: AccountActionTypes.GET_ACCOUNT, payload : res.data})
                     })
                     .catch(err => console.log(err))  
+    }
+}
+
+export const patchAccount = (data) => {
+    return (dispatch) => {
+        return axios({
+            method: "patch",
+            url: API_URL + "account",
+            headers: authHeader(),
+            data: {...data}
+        })
+        .then( () => {
+            dispatch({ type: AccountActionTypes.PATCH_ACCOUNT, payload : {...data}})
+        })
+        .catch(err => console.log(err))  
     }
 }
