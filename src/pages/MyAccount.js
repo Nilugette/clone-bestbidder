@@ -179,8 +179,11 @@ const MyAccount = () => {
                             TO DO :
                             Add a link to a new form to change password
                         **/} 
-                        <label htmlFor="inputChangePassword">Mot de Passe</label>
-                        <input type="submit" className="form-control btn btn-warning" id="inputChangePassword" value="Changer" />
+                        <label>Mot de Passe</label>
+                        <Link className="nav-link btn btn-warning" to="/changer-mot-de-passe" >
+                            Changer
+                        </Link>
+                        
                     </div>
                 </div>
                 <div className="form-row">

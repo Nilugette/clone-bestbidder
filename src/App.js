@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MyAccount from "./pages/MyAccount";
+import Password from "./pages/Password";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
                   <Route path='/auth/connexion' component={Login} />
                   <Route path='/auth/inscription' component={Register} />
                   <Route path='/mon-compte' component={MyAccount} />
+                  <Route path='/changer-mot-de-passe' component={Password} />
               </Switch>
             </div>
           <Footer />
