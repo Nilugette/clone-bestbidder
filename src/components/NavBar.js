@@ -27,17 +27,20 @@ const NavBar = () => {
                     <div className="collapse navbar-collapse" id="navbarCollapse">
                         <ul className="navbar-nav mr-auto" id="navbar-content">
                             {!currentUser ? (
-                                <li className="nav-item active">
-                                    <Link className="nav-link" to="/auth/connexion">Se connecter <span className="sr-only">(current)</span></Link>
-                                </li>
+                                <>
+                                    <li className="nav-item active">
+                                        <Link className="nav-link" to="/auth/connexion">Se connecter <span className="sr-only">(current)</span></Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/auth/inscription">S'inscrire</Link>
+                                    </li>
+                                </>
                             ) : (
                                 <li className="nav-item active">
                                     <Link className="nav-link" to="/mon-compte">Mon Compte<span className="sr-only">(current)</span></Link>
                                 </li>
                             )}
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/auth/inscription">S'inscrire</Link>
-                            </li>
+
                             <li className="nav-item">
                                 <Link className="nav-link" to="">Toutes les enchères</Link>
                             </li>
