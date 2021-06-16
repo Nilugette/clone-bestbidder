@@ -1,6 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector} from "react-redux";
+import { useDispatch } from "react-redux";
 import { patchAccount } from "../redux/account/account.action";
+
+
+const required = (value) => {
+    if (!value) {
+      return (
+        <div className="alert alert-danger" role="alert">
+          This field is required!
+        </div>
+      );
+    }
+};
 
 const vpassword = (value) => {
     if (value.length < 8 || value.length > 40) {
@@ -16,7 +27,7 @@ const vconfirmedPassword = (value) => {
     if (value.length < 8 || value.length > 40) {
         return (
         <div className="alert alert-danger" role="alert">
-            The password must be between 8 and 40 characters.
+            The confirmed password must be between 8 and 40 characters.
         </div>
         );
     }
@@ -54,7 +65,8 @@ const Password = () => {
                     id="newPassword" 
                     name="password"
                     value={password}
-                    onChange={ e => setPassword(e.target.value)}/>
+                    onChange={ e => setPassword(e.target.value)}
+                    validations={[required, vpassword]}/>
             </div>
             <div className="form-group text-center">
                 <label htmlFor="confirmedPassword">Confirmer votre nouveau mot de passe</label>
@@ -64,7 +76,8 @@ const Password = () => {
                     id="confirmedPassword" 
                     name="confirmed_password" 
                     value={passwordConfirmed}
-                    onChange={ e => setPasswordConfirmed(e.target.value)} />
+                    onChange={ e => setPasswordConfirmed(e.target.value)}
+                    validations={[required, vconfirmedPassword]} />
             </div>
 
             <div className="text-center">
