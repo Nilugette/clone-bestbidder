@@ -1,61 +1,126 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
+
+
 import { patchAccount } from "../redux/account/account.action";
 import { logout } from '../redux/authentication/auth.action';
 
+const formatDate = (value) => {
+    let dateobj = new Date(value);
+    let dateB = dateobj.toISOString();
+    return dateB
+ }
+ 
+ const formatDateToNormal = (value) => {
+    let dateN = new Date(value);
+    return dateN.getFullYear()+'-' + (dateN.getMonth()+1) + '-'+dateN.getDate();
+}
+ 
+
 const MyAccount = () => {
+
+
     const account = useSelector(state => state.accountReducer)
-    const [editFirstName, setEditFirstName] = useState(account.first_name)
-    const [editCountry, setEditCountry] = useState(account.country)
-    const [editLastName, setEditLastName] = useState(account.last_name)
-    const [editCity, setEditCity] = useState(account.city)
-    const [editCivility, setEditCivility] = useState("Mme")
-    const [editZipCode, setEditZipCode] = useState(account.zip_code)
-    const [editBirthdate, setEditBirthdate] = useState(account.birthdate)
-    const [editAddress, setEditAddress] = useState(account.address)
-    const [editAddress2, setEditAddress2] = useState(account.address_2)
-    const [editNotifEmail, setEditNotifEmail] = useState(false)
-    const [editNotifSMS, setEditNotifSMS] = useState(false)
+  
+    
+    // form validation rules 
+    const validationSchema = Yup.object().shape({
+        email: Yup.string()
+            .required('Champs requis ')
+            .email('Email invalide'),
+        nickname: Yup.string()
+            .required('Champs requis'),
+        phone: Yup.string()
+            .required('Champs requis')
+            .matches(/^(\+33|0033|0)(6|7)[0-9]{8}$/g, 'Numéro de mobile invalide'),
+        first_name: Yup.string()
+            .required('Champs requis'),
+        last_name: Yup.string()
+            .required('Champs requis'),
+        country: Yup.string()
+            .required('Champs requis'),
+        city: Yup.string()
+            .required('Champs requis'),
+        civility: Yup.string()
+            .required('Champs requis'),
+        zip_code: Yup.string()
+            .required('Champs requis'),
+        birthdate: Yup.string()
+            .required('Champs requis')
+            .matches(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date of Birth must be a valid date in the format YYYY-MM-DD'),
+        address: Yup.string()
+            .required('Champs requis'),
+        address_2: Yup.string(),
+        notifEmail: Yup.bool(),
+        notifSMS: Yup.bool()
+            
+    });
+
+
+    const { register, handleSubmit, formState } = useForm({
+        resolver: yupResolver(validationSchema),
+        defaultValues : {
+            email: account.email,
+            nickname: account.nickname,
+            phone: account.phone,
+            first_name: account.first_name,
+            country: account.country,
+            last_name: account.last_name,
+            city: account.city,
+            civility: account.civility,
+            zip_code: account.zip_code,
+            birthdate: formatDateToNormal(account.birthdate),
+            address: account.address,
+            address_2: account.address_2,
+            notifEmail: account.notifEmail,
+            notifSMS: account.notifSMS
+        },
+        shouldUnregister: false 
+    });
+    const { errors, isSubmitSuccessful, isSubmitting} = formState;
+    
+    console.log(isSubmitSuccessful)
+    console.log(errors)
 
     const dispatch = useDispatch();
 
-    const handlePatchAccount = async (e) => {
-        e.preventDefault() 
-        const patchAccountData = {
-            bb: account.bb,
-            email: account.email,
-            email_validate: account.email_validate,
-            id: account.id,
-            nickname: account.nickname,
-            optin_email: account.optin_email,
-            optin_sms: account.optin_sms,
-            phone: account.phone,
-            phone_validate: account.phone_validate,
-            total_auction: account.total_auction,
-            total_buy: account.total_buy,
-            total_waiting_action: account.total_waiting_action,
-            first_name: editFirstName,
-            country: editCountry,
-            last_name: editLastName,
-            city: editCity,
-            civility: editCivility,
-            zip_code: parseInt(editZipCode),
-            bithdate: editBirthdate + "T00:00:00.000Z",
-            address: editAddress,
-            address_2: editAddress2,
-            notifEmail: editNotifEmail,
-            notifSMS: editNotifSMS
-        }
-        dispatch(patchAccount(patchAccountData))
-      }
+
+    const handlePatchAccount = async (data,e) => {
+            e.preventDefault()
+
+            
+            const birthDate = formatDate(data.birthdate)
+            console.log(birthDate)
+            data = {
+                email: data.email,
+                nickname: data.nickname,
+                phone: data.phone,
+                first_name: data.first_name,
+                country: data.country,
+                last_name: data.last_name,
+                city: data.city,
+                civility: data.civility,
+                zip_code: data.zip_code,
+                birthdate: birthDate,
+                address: data.address,
+                address_2: data.address_2,
+                notifEmail: data.notifEmail,
+                notifSMS: data.notifSMS
+            }
+            console.log(data)
+            await dispatch(patchAccount(data))
+    }
+
 
     const logOut = () => {
       dispatch(logout());
     };
   
-
-
 
     return (
         <div className="container">
@@ -63,122 +128,144 @@ const MyAccount = () => {
                 <h3>Complétez ou modifiez vos informations</h3>
             </header>
 
-            <form  onSubmit={e => handlePatchAccount(e)}>
+            <form onSubmit={handleSubmit(handlePatchAccount)}>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputEmail">Votre email</label>
-                        <input type="email" className="form-control" id="inputEmail" defaultValue={account.email} name="email" />
+                        <label htmlFor="inputEmail">Votre email *</label>
+                            <input 
+                                name="email" 
+                                type="text" 
+                                id="inputEmail"
+                                className= {`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                {...register('email')} />
+                            <div className="invalid-feedback">{errors.email?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputNickname">Votre pseudo</label>
-                        <input type="text" className="form-control" id="inputNickname" defaultValue={account.nickname} name="nickname" />
+                        <label htmlFor="inputNickName">Votre pseudo *</label>
+                            <input 
+                                name="nickname" 
+                                type="text" 
+                                id="inputNickName"
+                                className= {`form-control ${errors.nickname ? 'is-invalid' : ''}`}
+                                {...register('nickname')} />
+                            <div className="invalid-feedback">{errors.nickname?.message}</div>
+                        
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputMobile">Votre n° de mobile</label>
-                        <input type="tel" className="form-control" id="inputMobile" defaultValue={account.phone} name="phone"/>
+                        <label htmlFor="inputMobile">Votre n° de mobile *</label>
+                        <input 
+                            type="tel" 
+                            id="inputMobile" 
+                            name="phone"
+                            className= {`form-control ${errors.phone ? 'is-invalid' : ''}`}
+                            {...register('phone')} />
+                        <div className="invalid-feedback">{errors.phone?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputFirstName">Votre prénom</label>
+                        <label htmlFor="inputFirstName">Votre prénom *</label>
                         <input 
-                            type="text" 
-                            className="form-control" 
-                            id="inputFirstName" 
                             name="first_name" 
-                            defaultValue={account.first_name}
-                            onChange={ e => setEditFirstName(e.target.value)} />
+                            id="inputFirstName" 
+                            type="text" 
+                            className= {`form-control ${errors.first_name ? 'is-invalid' : ''}`}
+                            {...register('first_name')} />
+                        <div className="invalid-feedback">{errors.first_name?.message}</div>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputCountry">Votre pays</label>
+        
+                        <label htmlFor="inputCountry">Votre pays *</label>
                         <input 
-                            type="text" 
-                            className="form-control" 
+                            name="country" 
                             id="inputCountry" 
-                            name="country"
-                            defaultValue={account.country}
-                            onChange={ e => setEditCountry(e.target.value)} />
+                            type="text" 
+                            className= {`form-control ${errors.country ? 'is-invalid' : ''}`}
+                            {...register('country')}  />
+                        <div className="invalid-feedback">{errors.country?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputLastName">Votre nom</label>
+                        <label htmlFor="inputLastName">Votre nom *</label>
                         <input 
-                            type="text" 
-                            className="form-control" 
-                            id="inputLastName" 
                             name="last_name" 
-                            defaultValue={account.last_name}
-                            onChange={ e => setEditLastName(e.target.value)} />
+                            id="inputLastName" 
+                            type="text" 
+                            className= {`form-control ${errors.last_name ? 'is-invalid' : ''}`}
+                            {...register('last_name')} 
+                            />
+                        <div className="invalid-feedback">{errors.last_name?.message}</div>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputCity">Votre ville</label>
+                        <label htmlFor="inputCity">Votre ville *</label>
                         <input 
+                            name="city" 
+                            id="inputCity" 
                             type="text" 
-                            className="form-control" 
-                            id="inputCity" name="city" 
-                            defaultValue={account.city} 
-                            onChange={ e =>setEditCity(e.target.value)} />
+                            className= "form-control"
+                            {...register('city')} 
+                             />
+                        <div className="invalid-feedback">{errors.city?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputTitle">Votre Civilité</label>
-                        <select 
-                            id="inputTitle" 
-                            className="form-control" 
-                            name="civility"
-                            defaultValue={account.civility}
-                            onChange={ e =>setEditCivility(e.target.value)} >
+                        <label htmlFor="inputTitle">Votre Civilité *</label>
+                            <select 
+                                name="civility" 
+                                id="inputTitle" 
+                                className= {`form-control ${errors.civility ? 'is-invalid' : ''}`}
+                                {...register('civility')} 
+                                
+                            >
+                                <option value=""></option>
                                 <option value="Mme">Mme</option>
                                 <option value="M.">M.</option>
-                        </select>
+                            </select>
+                        <div className="invalid-feedback">{errors.civility?.message}</div>
                     </div>
                 </div>
                 <div className="form-row">
-                        {/** 
-                            Doesn't work even on Postman, the value is patched but not retrieve in the GET payload
-                         **/} 
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputZip">Votre code postal</label>
+                        <label htmlFor="inputZip">Votre code postal *</label>
                         <input 
-                            type="text" 
-                            className="form-control" 
+                            name="zip_code" 
                             id="inputZip" 
-                            name="zip_code"
-                            defaultValue={account.zip_code}
-                            onChange={ e => setEditZipCode(e.target.value)} />
+                            type="text" 
+                            className= {`form-control ${errors.zip_code ? 'is-invalid' : ''}`}
+                            {...register('zip_code')} 
+                            />
+                        <div className="invalid-feedback">{errors.zip_code?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
                         {/** 
                             Via Postman, birthdate sent and received in specific format, mine is sent but not retrieve
                          **/} 
-                        <label htmlFor="inputBirthDate">Votre date de naissance</label>
+                        <label htmlFor="inputBirthDate">Votre date de naissance *</label>
                         <input 
-                        type="date" 
-                        className="form-control" 
-                        id="inputBirthDate" 
-                        name="birthdate" 
-                        defaultValue={account.birthdate}
-                        onChange={ e => setEditBirthdate(e.target.value)} />
+                            type="date" 
+                            id="inputBirthDate" 
+                            name="birthdate" 
+                            className= {`form-control ${errors.birthdate ? 'is-invalid' : ''}`}
+                            {...register('birthdate')} 
+                            />
+                        <div className="invalid-feedback">{errors.birthdate?.message}</div> 
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-                        <label htmlFor="inputAddress">Votre adresse</label>
+                        <label htmlFor="inputAddress">Votre adresse *</label>
                         <input 
-                            type="text" 
-                            className="form-control" 
+                            name="address" 
                             id="inputAddress" 
-                            name="address"
-                            defaultValue={account.address}
-                            onChange={ e => setEditAddress(e.target.value)} />
+                            type="text" 
+                            className= {`form-control ${errors.address ? 'is-invalid' : ''}`}
+                            {...register('address')} 
+                            />
+                        <div className="invalid-feedback">{errors.address?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
-                        {/** 
-                            TO DO :
-                            Add a link to a new form to change password
-                        **/} 
                         <label>Mot de Passe</label>
                         <Link className="nav-link btn btn-warning" to="/changer-mot-de-passe" >
                             Changer
@@ -187,57 +274,48 @@ const MyAccount = () => {
                     </div>
                 </div>
                 <div className="form-row">
+                    
                     <div className="form-group col-md-6">
                         <label htmlFor="inputAddressDetail">Complément d'adresse</label>
                         <input 
-                        type="text" 
-                        className="form-control" 
-                        id="inputAddressDetail" 
-                        name="address_2"
-                        defaultValue={account.address_2}
-                        onChange={ e => setEditAddress2(e.target.value)} />
+                            name="address_2" 
+                            id="inputAddressDetail" 
+                            type="text" 
+                            {...register('address_2')} 
+                            className="form-control" />
                     </div>
                 </div>
                 <div className="form-group">
-                    {/** 
-                        Doesn't work even on Postman, the value is patched but not retrieve in the GET payload
-                     **/} 
                     <div className="form-check">
                         <input 
                             className="form-check-input" 
                             type="checkbox" 
                             id="gridCheck" 
                             name="notifEmail" 
-                            value={account.notifEmail}
-                            checked={editNotifEmail}
-                            onChange={e => setEditNotifEmail(!editNotifEmail)}/>
+                            {...register('notifEmail')} 
+                           />
                         <label className="form-check-label" htmlFor="gridCheck">
                             Je souhaite être informé par email de l'actualité de Bestbidder (nouvelles enchères, évènements...)
                         </label>
                     </div>
                 </div>
                 <div className="form-group">
-                    {/** 
-                        Doesn't work even on Postman, the value is patched but not retrieve in the GET payload
-                    **/} 
                     <div className="form-check">
                         <input 
                             className="form-check-input" 
                             type="checkbox" 
                             id="gridCheck" 
                             name="notifSMS"
-                            value={account.notifSMS}
-                            checked={editNotifSMS}
-                            onChange={e => setEditNotifSMS(!editNotifSMS)} />
+                            {...register('notifSMS')} 
+                             />
                         <label className="form-check-label" htmlFor="gridCheck">
                             Je souhaite recevoir des notification par SMS de Bestbidder
                         </label>
                     </div>
                 </div>
                 <div className="text-center">
-                    <button type="submit" className="btn btn-warning">Je modifie</button>
+                    <button disabled={isSubmitting} type="submit" className="btn btn-warning">Je modifie</button>
                 </div>
-                
             </form>
             <br/>
                 <Link className="nav-link btn btn-secondary" to="/auth/connexion"  onClick={logOut}>Se déconnecter</Link>

@@ -1,6 +1,5 @@
 import axios from "axios";
 import API_URL from "../api/constant";
-import authHeader from "./auth-header";
 
 const register = (email, nickname, password, phone) => {
   return axios.post(API_URL + "register", {
@@ -99,6 +98,7 @@ const formatPhone = (phone) => {
   return null;
 }
 
+
 const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
@@ -110,4 +110,5 @@ export default {
   register,
   login,
   logout
+
 };

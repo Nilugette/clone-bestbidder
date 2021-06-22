@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { patchAccount } from "../redux/account/account.action";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
 
 
 const required = (value) => {
@@ -36,6 +37,7 @@ const vdontMatch = () => {
 
 const Password = () => {
   const form = useRef();
+  const checkBtn = useRef();
   //const account = useSelector(state => state.accountReducer)
   const [password, setPassword] = useState("")
   const [passwordConfirmed, setPasswordConfirmed] = useState("")
@@ -84,7 +86,8 @@ const Password = () => {
 
             <div className="text-center">
                 <button type="submit" className="btn btn-warning">Je valide</button>
-            </div>   
+            </div> 
+            <CheckButton style={{ display: "none" }} ref={checkBtn} />  
         </Form>
     </div>
   );

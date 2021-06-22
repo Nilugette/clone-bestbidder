@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
+import { isEmail, isMobilePhone } from "validator";
 import { register } from "../redux/authentication/auth.action";
 
 
@@ -12,7 +12,7 @@ const required = (value) => {
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
-        This field is required!
+        Champs requis.
       </div>
     );
   }
@@ -29,12 +29,12 @@ const validEmail = (value) => {
 };
 
 const vphone = (value) => {
-  if (!(value.match(/^(\+33|0033|0)(6|7)[0-9]{8}$/g) && value !== '') ) {
+  if (!isMobilePhone(value, "fr-FR")) {
     return (
-      <div className="alert alert-danger" role="alert">
-        The mobile number is not correct
-      </div>
-    );
+        <div className="alert alert-danger" role="alert">
+          The mobile number is not correct
+        </div>
+      );
   }
 };
 
