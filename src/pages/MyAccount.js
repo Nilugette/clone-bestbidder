@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom"
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import DatePicker from "react-datepicker";
 
-
+import "react-datepicker/dist/react-datepicker.css";
 
 import { patchAccount } from "../redux/account/account.action";
 import { logout } from '../redux/authentication/auth.action';
+
 
 const formatDate = (value) => {
     let dateobj = new Date(value);
@@ -21,14 +23,10 @@ const formatDate = (value) => {
     return dateN.getFullYear()+'-' + (dateN.getMonth()+1) + '-'+dateN.getDate();
 }
  
-
 const MyAccount = () => {
-
 
     const account = useSelector(state => state.accountReducer)
   
-    
-    // form validation rules 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
             .required('Champs requis ')
@@ -51,8 +49,7 @@ const MyAccount = () => {
         zip_code: Yup.string()
             .required('Champs requis'),
         birthdate: Yup.string()
-            .required('Champs requis')
-            .matches(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date of Birth must be a valid date in the format YYYY-MM-DD'),
+            .required('Champs requis'),
         address: Yup.string()
             .required('Champs requis'),
         address_2: Yup.string(),
@@ -62,7 +59,8 @@ const MyAccount = () => {
     });
 
 
-    const { register, handleSubmit, formState } = useForm({
+    const { register, handleSubmit, formState, control } = useForm({
+        mode: "onSubmit",
         resolver: yupResolver(validationSchema),
         defaultValues : {
             email: account.email,
@@ -82,20 +80,15 @@ const MyAccount = () => {
         },
         shouldUnregister: false 
     });
-    const { errors, isSubmitSuccessful, isSubmitting} = formState;
-    
-    console.log(isSubmitSuccessful)
-    console.log(errors)
+    const { errors, isSubmitting} = formState;
 
     const dispatch = useDispatch();
 
-
-    const handlePatchAccount = async (data,e) => {
+    const handlePatchAccount = (data,e) => {
             e.preventDefault()
 
-            
             const birthDate = formatDate(data.birthdate)
-            console.log(birthDate)
+
             data = {
                 email: data.email,
                 nickname: data.nickname,
@@ -112,15 +105,13 @@ const MyAccount = () => {
                 notifEmail: data.notifEmail,
                 notifSMS: data.notifSMS
             }
-            console.log(data)
-            await dispatch(patchAccount(data))
+            
+            dispatch(patchAccount(data))
     }
-
 
     const logOut = () => {
       dispatch(logout());
     };
-  
 
     return (
         <div className="container">
@@ -149,7 +140,6 @@ const MyAccount = () => {
                                 className= {`form-control ${errors.nickname ? 'is-invalid' : ''}`}
                                 {...register('nickname')} />
                             <div className="invalid-feedback">{errors.nickname?.message}</div>
-                        
                     </div>
                 </div>
                 <div className="form-row">
@@ -176,7 +166,6 @@ const MyAccount = () => {
                 </div>
                 <div className="form-row">
                     <div className="form-group col-md-6">
-        
                         <label htmlFor="inputCountry">Votre pays *</label>
                         <input 
                             name="country" 
@@ -216,9 +205,7 @@ const MyAccount = () => {
                                 name="civility" 
                                 id="inputTitle" 
                                 className= {`form-control ${errors.civility ? 'is-invalid' : ''}`}
-                                {...register('civility')} 
-                                
-                            >
+                                {...register('civility')}  >
                                 <option value=""></option>
                                 <option value="Mme">Mme</option>
                                 <option value="M.">M.</option>
@@ -239,18 +226,21 @@ const MyAccount = () => {
                         <div className="invalid-feedback">{errors.zip_code?.message}</div>
                     </div>
                     <div className="form-group col-md-6">
-                        {/** 
-                            Via Postman, birthdate sent and received in specific format, mine is sent but not retrieve
-                         **/} 
                         <label htmlFor="inputBirthDate">Votre date de naissance *</label>
-                        <input 
-                            type="date" 
-                            id="inputBirthDate" 
-                            name="birthdate" 
+                        <Controller
+                            control={control}
+                            name="birthdate"
                             className= {`form-control ${errors.birthdate ? 'is-invalid' : ''}`}
-                            {...register('birthdate')} 
-                            />
-                        <div className="invalid-feedback">{errors.birthdate?.message}</div> 
+                            render={(props) => (
+                                <DatePicker
+                                  value={props.field.value} 
+                                  onChange={(data) => {
+                                      props.field.onChange(formatDateToNormal(data))
+                                  }}
+                                />
+                            )}
+                        />
+                        <div className="invalid-feedback">{errors.birthdate?.message}</div>
                     </div>
                 </div>
                 <div className="form-row">
