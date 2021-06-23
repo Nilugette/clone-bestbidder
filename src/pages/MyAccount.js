@@ -194,7 +194,7 @@ const MyAccount = () => {
                             name="city" 
                             id="inputCity" 
                             type="text" 
-                            className= "form-control"
+                            className= {`form-control ${errors.city ? 'is-invalid' : ''}`}
                             {...register('city')} 
                              />
                         <div className="invalid-feedback">{errors.city?.message}</div>
@@ -230,10 +230,11 @@ const MyAccount = () => {
                         <Controller
                             control={control}
                             name="birthdate"
-                            className= {`form-control ${errors.birthdate ? 'is-invalid' : ''}`}
+                            className= {` ${errors.birthdate ? 'is-invalid' : ''}`}
                             render={(props) => (
                                 <DatePicker
                                   value={props.field.value} 
+                                  className="form-control"
                                   onChange={(data) => {
                                       props.field.onChange(formatDateToNormal(data))
                                   }}
