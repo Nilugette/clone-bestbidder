@@ -10,16 +10,16 @@ const Footer = () => {
                     <nav className="navbar navbar-expand-md justify-content-center navbar-dark fixed-bottom bg-dark">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <Link className="nav-link" to="#">Créer mon compte</Link>
+                                <Link className="nav-link" to="/auth/inscription">Créer mon compte</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="#">Afficher par catégorie</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="#">Toutes les enchères</Link>
+                                <Link className="nav-link" to="/">Toutes les enchères</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="#">Acheter des Bb's</Link>
+                                <Link className="nav-link" to="/acheter-des-bbs">Acheter des Bb's</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="#">Mode d'emploi</Link>

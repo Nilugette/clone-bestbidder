@@ -49,7 +49,7 @@ const ModalAuctions = (props) => {
                 </p>
               </Modal.Body>
               <Modal.Footer>
-                    <Link className="nav-link btn btn-warning" to="#" >
+                    <Link className="nav-link btn btn-warning" to="/acheter-des-bbs" >
                                 J'achète des Bb's
                     </Link>
               </Modal.Footer>
