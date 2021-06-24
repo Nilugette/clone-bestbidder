@@ -1,12 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 
 const BuyBbs = () => {
-
+    const [valueBbs, setValueBbs] = useState(10)
     const element = <FontAwesomeIcon icon={faArrowRight} />
+
+    const handleChange = (e) => {
+        e.preventDefault()
+
+        const targetValue = e.target.value
+        if(targetValue > 500) {
+            setValueBbs((targetValue*0.86).toFixed(2))
+        } else if(targetValue > 199) {
+            setValueBbs((targetValue*0.90).toFixed(2)) 
+        } else if(targetValue > 99) {
+            setValueBbs((targetValue*0.95).toFixed(2)) 
+        } else if(targetValue > 49) {
+            setValueBbs((targetValue*0.98).toFixed(2)) 
+        } else {
+            setValueBbs(targetValue)
+        }
+       
+    }
+
     return ( 
         <div className="container position-relative px-4 px-lg-5">
             <div className="row gx-4 gx-lg-5 justify-content-center">
@@ -21,8 +40,8 @@ const BuyBbs = () => {
                         <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>
                         <div class="card ">
                             <div class="card-body">
-                                <h5 class="card-title">Je souhaite acheter : 10 Bbs</h5>
-                                <p class="card-text">Pour un montant de : 10€</p>
+                                <h5 class="card-title d-flex flex-row justify-content-center">Je souhaite acheter : <input className="form-control w-25" id="ex1" type="text" defaultValue={valueBbs} onChange={handleChange} ></input> Bbs</h5>
+                                <p class="card-text">Pour un montant de : <span>{valueBbs}</span> €</p>
                                 <Link className="nav-link btn btn-warning" to="#" >
                                         J'achète des Bb's
                                 </Link>
