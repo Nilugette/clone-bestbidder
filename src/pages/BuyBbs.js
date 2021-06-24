@@ -38,10 +38,10 @@ const BuyBbs = () => {
                         <p>De 100 à 199 Bb's { element } <span> 1 Bb's = 0.95€</span></p>
                         <p>De 200 à 499 Bb's { element } <span> 1 Bb's = 0.90€</span></p>
                         <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>
-                        <div class="card ">
-                            <div class="card-body">
-                                <h5 class="card-title d-flex flex-row justify-content-center">Je souhaite acheter : <input className="form-control w-25" id="ex1" type="text" defaultValue={valueBbs} onChange={handleChange} ></input> Bbs</h5>
-                                <p class="card-text">Pour un montant de : <span>{valueBbs}</span> €</p>
+                        <div className="card ">
+                            <div className="card-body">
+                                <h5 className="card-title d-flex flex-row justify-content-center">Je souhaite acheter : <input className="form-control w-25" id="ex1" type="text" defaultValue={valueBbs} onChange={handleChange} ></input> Bbs</h5>
+                                <p className="card-text">Pour un montant de : <span>{valueBbs}</span> €</p>
                                 <Link className="nav-link btn btn-warning" to="#" >
                                         J'achète des Bb's
                                 </Link>
