@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom"
 import { useForm, Controller } from "react-hook-form";
@@ -26,6 +26,7 @@ const formatDate = (value) => {
 const MyAccount = () => {
 
     const account = useSelector(state => state.accountReducer)
+    
   
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -59,7 +60,7 @@ const MyAccount = () => {
     });
 
 
-    const { register, handleSubmit, formState, control } = useForm({
+    const { register, handleSubmit, reset, formState, control } = useForm({
         mode: "onSubmit",
         resolver: yupResolver(validationSchema),
         defaultValues : {
@@ -108,6 +109,10 @@ const MyAccount = () => {
             
             dispatch(patchAccount(data))
     }
+
+    useEffect(() => {
+        reset(account);
+      }, [account]);
 
     const logOut = () => {
       dispatch(logout());
@@ -233,7 +238,7 @@ const MyAccount = () => {
                             className= {` ${errors.birthdate ? 'is-invalid' : ''}`}
                             render={(props) => (
                                 <DatePicker
-                                  value={props.field.value} 
+                                  value={formatDateToNormal(props.field.value)} 
                                   className="form-control"
                                   onChange={(data) => {
                                       props.field.onChange(formatDateToNormal(data))
