@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import CheckoutForm from '../components/CheckoutForm'
 
 
 const BuyBbs = () => {
@@ -45,6 +48,13 @@ const BuyBbs = () => {
                                 <Link className="nav-link btn btn-warning" to="#" >
                                         J'achète des Bb's
                                 </Link>
+                                <Elements
+                                    stripe={loadStripe(
+                                    'pk_test_51HyICRIp2NuwooqEI1f174tJSRW62mg9U4VfMqDvYNid50KI99aj8eqCP1u2XCR0aefzmeUBDkP7ahxsxwtnlFHU00AqQb7bf7',
+                                    )}
+                                >
+                                    <CheckoutForm />
+                                </Elements>
                             </div>
                         </div>
                     </div>
