@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { loadStripe } from '@stripe/stripe-js';
@@ -9,17 +10,15 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 
 const BuyBbs = () => {
-    const [valueBbs, setValueBbs] = useState(1)
+    const account = useSelector(state => state.accountReducer)
+    const [valueBbs, setValueBbs] = useState(1) 
     const [quantity, setQuantity] = useState(10)
-    console.log(quantity)
     const [bbsPrice, setBbsPrice] = useState(BbsPrices.PRICE_UP_TO_FORTY_NINE);
     const element = <FontAwesomeIcon icon={faArrowRight} />
 
     const handleChange = (e) => {
         e.preventDefault()
-
         const targetValue = e.target.value
-
         if(targetValue >= 500 ) {
             setValueBbs(0.86)
             setBbsPrice(BbsPrices.PRICE_FROM_FIVE_HUNDRED)
@@ -42,8 +41,6 @@ const BuyBbs = () => {
 
     const handleClick = async (event) => {
         const stripe = await stripePromise;
-        console.log(typeof quantity)
-        console.log(bbsPrice)
         const { error } = await stripe.redirectToCheckout({
             lineItems: [{
                 price: bbsPrice,
@@ -52,6 +49,7 @@ const BuyBbs = () => {
             mode: 'payment',
             successUrl: 'http://127.0.0.1:3000',
             cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
+            customerEmail : account.email
             });
 
     }
