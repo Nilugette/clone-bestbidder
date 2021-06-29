@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 
+
 # testing
 /coverage
 
@@ -12,6 +13,7 @@
 /build
 
 /src/api
+/src/stripe
 
 # misc
 .DS_Store

@@ -1,33 +1,61 @@
 import React, { useState } from 'react'
-import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from '../components/CheckoutForm'
+import STRIPE_PUBLISHABLE_KEY from '../stripe/key';
+import BbsPrices from '../stripe/bbs-prices';
+
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 
 const BuyBbs = () => {
-    const [valueBbs, setValueBbs] = useState(10)
+    const [valueBbs, setValueBbs] = useState(1)
+    const [quantity, setQuantity] = useState(10)
+    console.log(quantity)
+    const [bbsPrice, setBbsPrice] = useState(BbsPrices.PRICE_UP_TO_FORTY_NINE);
     const element = <FontAwesomeIcon icon={faArrowRight} />
 
     const handleChange = (e) => {
         e.preventDefault()
 
         const targetValue = e.target.value
-        if(targetValue > 500) {
-            setValueBbs((targetValue*0.86).toFixed(2))
+
+        if(targetValue >= 500 ) {
+            setValueBbs(0.86)
+            setBbsPrice(BbsPrices.PRICE_FROM_FIVE_HUNDRED)
         } else if(targetValue > 199) {
-            setValueBbs((targetValue*0.90).toFixed(2)) 
+            setValueBbs(0.90) 
+            setBbsPrice(BbsPrices.PRICE_UP_TO_FOUR_HUNDRED_NINETY_NINE)
         } else if(targetValue > 99) {
-            setValueBbs((targetValue*0.95).toFixed(2)) 
+            setValueBbs(0.95) 
+            setBbsPrice(BbsPrices.PRICE_UP_TO_ONE_HUNDRED_NINETY_NINE)
         } else if(targetValue > 49) {
-            setValueBbs((targetValue*0.98).toFixed(2)) 
+            setValueBbs(0.98) 
+            setBbsPrice(BbsPrices.PRICE_UP_TO_NINETY_NINE)
         } else {
-            setValueBbs(targetValue)
+            setValueBbs(1) 
+            setBbsPrice(BbsPrices.PRICE_UP_TO_FORTY_NINE)
         }
+        setQuantity(targetValue)
        
     }
+
+    const handleClick = async (event) => {
+        const stripe = await stripePromise;
+        console.log(typeof quantity)
+        console.log(bbsPrice)
+        const { error } = await stripe.redirectToCheckout({
+            lineItems: [{
+                price: bbsPrice,
+                quantity: parseInt(quantity, 10),
+            }],
+            mode: 'payment',
+            successUrl: 'http://127.0.0.1:3000',
+            cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
+            });
+
+    }
+
 
     return ( 
         <div className="container position-relative px-4 px-lg-5">
@@ -43,18 +71,11 @@ const BuyBbs = () => {
                         <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>
                         <div className="card ">
                             <div className="card-body">
-                                <h5 className="card-title d-flex flex-row justify-content-center">Je souhaite acheter : <input className="form-control w-25" id="ex1" type="text" defaultValue={valueBbs} onChange={handleChange} ></input> Bbs</h5>
-                                <p className="card-text">Pour un montant de : <span>{valueBbs}</span> €</p>
-                                <Link className="nav-link btn btn-warning" to="#" >
+                                <h5 className="card-title d-flex flex-row justify-content-center">Je souhaite acheter : <input className="form-control w-25" id="ex1" type="text" defaultValue={quantity} onChange={handleChange} ></input> Bbs</h5>
+                                <p className="card-text">Pour un montant de : <span>{(valueBbs*quantity).toFixed(2)}</span> €</p>
+                                <button role="link" onClick={handleClick} className="nav-link btn btn-warning">
                                         J'achète des Bb's
-                                </Link>
-                                <Elements
-                                    stripe={loadStripe(
-                                    'pk_test_51HyICRIp2NuwooqEI1f174tJSRW62mg9U4VfMqDvYNid50KI99aj8eqCP1u2XCR0aefzmeUBDkP7ahxsxwtnlFHU00AqQb7bf7',
-                                    )}
-                                >
-                                    <CheckoutForm />
-                                </Elements>
+                                </button>
                             </div>
                         </div>
                     </div>
