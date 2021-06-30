@@ -1,16 +1,25 @@
-import React, { useState } from 'react'
-import { useSelector } from "react-redux";
+import React, { useState, useRef } from 'react'
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+
 import { loadStripe } from '@stripe/stripe-js';
 import STRIPE_PUBLISHABLE_KEY from '../stripe/key';
 import BbsPrices from '../stripe/bbs-prices';
+import { patchAccount } from '../redux/account/account.action';
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 
 const BuyBbs = () => {
+    const form = useRef();
+
     const account = useSelector(state => state.accountReducer)
+    const dispatch = useDispatch();
+    const [completedSuccess, setCompletedSuccess] = useState(false)
     const [valueBbs, setValueBbs] = useState(1) 
     const [quantity, setQuantity] = useState(10)
     const [bbsPrice, setBbsPrice] = useState(BbsPrices.PRICE_UP_TO_FORTY_NINE);
@@ -39,19 +48,54 @@ const BuyBbs = () => {
        
     }
 
-    const handleClick = async (event) => {
+    // const handleClick = async (event) => {
+    //     const stripe = await stripePromise;
+    //     const { error } = await stripe.redirectToCheckout({
+    //             lineItems: [{
+    //                 price: bbsPrice,
+    //                 quantity: parseInt(quantity, 10),
+    //             }],
+    //             mode: 'payment',
+    //             successUrl: 'http://127.0.0.1:3000',
+    //             cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
+    //             customerEmail : account.email
+    //         }).then( res => console.log(res) );
+    
+    //     console.log('toto')
+    //     console.log(stripe)
+    //     if(!error) {
+    //         console.log('caca')
+    //         setCompletedSuccess(true)
+    //     }
+        
+    // }
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         const stripe = await stripePromise;
         const { error } = await stripe.redirectToCheckout({
-            lineItems: [{
-                price: bbsPrice,
-                quantity: parseInt(quantity, 10),
-            }],
-            mode: 'payment',
-            successUrl: 'http://127.0.0.1:3000',
-            cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
-            customerEmail : account.email
-            });
-
+                lineItems: [{
+                    price: bbsPrice,
+                    quantity: parseInt(quantity, 10),
+                }],
+                mode: 'payment',
+                successUrl: 'http://127.0.0.1:3000',
+                cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
+                customerEmail : account.email
+            }).then( res => console.log(res) );
+    
+        console.log('toto')
+        console.log(stripe)
+        if(!error) {
+            console.log('caca')
+            const data = {
+                bb : 56
+            }
+            console.log(data.bb)
+            dispatch(patchAccount(data))
+           
+        }
     }
 
 
@@ -66,16 +110,20 @@ const BuyBbs = () => {
                         <p>De 50 à 99 Bb's { element } <span> 1 Bb's = 0.98€</span></p>
                         <p>De 100 à 199 Bb's { element } <span> 1 Bb's = 0.95€</span></p>
                         <p>De 200 à 499 Bb's { element } <span> 1 Bb's = 0.90€</span></p>
-                        <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>
-                        <div className="card ">
-                            <div className="card-body">
-                                <h5 className="card-title d-flex flex-row justify-content-center">Je souhaite acheter : <input className="form-control w-25" id="ex1" type="text" defaultValue={quantity} onChange={handleChange} ></input> Bbs</h5>
-                                <p className="card-text">Pour un montant de : <span>{(valueBbs*quantity).toFixed(2)}</span> €</p>
-                                <button role="link" onClick={handleClick} className="nav-link btn btn-warning">
-                                        J'achète des Bb's
-                                </button>
-                            </div>
-                        </div>
+                        <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>                    
+                        <Form onSubmit={handleSubmit} ref={form}>
+                            <div className="card ">
+                                <div className="card-body">
+                                    <div className="card-title d-flex flex-row justify-content-center">
+                                        <div className="p-2">Je souhaite acheter :</div>
+                                        <div className="p-2"><Input className="form-control form-control-inline" type="text" value={quantity} onChange={handleChange} /></div>
+                                        <div className="p-2"> Bbs</div>
+                                    </div>
+                                    <p className="card-text">Pour un montant de : <span>{(valueBbs*quantity).toFixed(2)}</span> €</p>
+                                    <Input role="link" className="nav-link btn btn-warning w-100" type="submit" value="J'achète des Bb's"/>
+                                </div>
+                            </div>    
+                        </Form>
                     </div>
                 </div>
             </div>
