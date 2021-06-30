@@ -1,10 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux"
-
 
 const Card = ({ auction, onShow }) => {
 
-  const { user: currentUser } = useSelector((state) => state.auth);
 
   return (
       <div className="card" style={{width: "18rem"}}>

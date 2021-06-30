@@ -10,7 +10,7 @@ import Input from "react-validation/build/input";
 import { loadStripe } from '@stripe/stripe-js';
 import STRIPE_PUBLISHABLE_KEY from '../stripe/key';
 import BbsPrices from '../stripe/bbs-prices';
-import { patchAccount } from '../redux/account/account.action';
+import { postBbs } from '../redux/buyBbs/buyBbs.action';
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
@@ -59,17 +59,18 @@ const BuyBbs = () => {
                 }],
                 mode: 'payment',
                 successUrl: 'http://127.0.0.1:3000',
-                cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
+                cancelUrl: 'http://127.0.0.1:3000/acheter-des-bbs',
                 customerEmail : account.email
+            }).then( result => {
+                console.log(result)
+                if(!result.error.message) {
+                    const data = {
+                        qty: parseInt(quantity, 10)
+                    }
+                    dispatch(postBbs(data)) 
+                }
             })
-    
-
-        if(!error) {
-            const data = {
-                bb : parseInt(quantity, 10)+parseInt(account.bb, 10)
-            }
-            dispatch(patchAccount(data)) 
-        }
+        console.log(error)
     }
 
 
