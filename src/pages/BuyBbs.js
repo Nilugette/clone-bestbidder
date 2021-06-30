@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { Link } from "react-router-dom"
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
@@ -18,6 +19,7 @@ const BuyBbs = () => {
     const form = useRef();
 
     const account = useSelector(state => state.accountReducer)
+    const { user: currentUser } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const [valueBbs, setValueBbs] = useState(1) 
     const [quantity, setQuantity] = useState(10)
@@ -82,20 +84,41 @@ const BuyBbs = () => {
                         <p>De 50 à 99 Bb's { element } <span> 1 Bb's = 0.98€</span></p>
                         <p>De 100 à 199 Bb's { element } <span> 1 Bb's = 0.95€</span></p>
                         <p>De 200 à 499 Bb's { element } <span> 1 Bb's = 0.90€</span></p>
-                        <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>                    
-                        <Form onSubmit={handleSubmit} ref={form}>
+                        <p>A partir de 500 Bb's { element } <span> 1 Bb's = 0.86€</span></p>  
+                        {!currentUser ?  (
                             <div className="card ">
                                 <div className="card-body">
-                                    <div className="card-title d-flex flex-row justify-content-center">
-                                        <div className="p-2">Je souhaite acheter :</div>
-                                        <div className="p-2"><Input className="form-control form-control-inline" type="text" value={quantity} onChange={handleChange} /></div>
-                                        <div className="p-2"> Bbs</div>
+                                    <div className="card-title">
+                                        <h3>Vous n'êtes pas connecté.</h3>
                                     </div>
-                                    <p className="card-text">Pour un montant de : <span>{(valueBbs*quantity).toFixed(2)}</span> €</p>
-                                    <Input role="link" className="nav-link btn btn-warning w-100" type="submit" value="J'achète des Bb's"/>
+                                    <p className="card-text">Vous devez vous identitfier pour acheter vos Bb's</p>
+                                    <p className="card-text">Si vous n'êtes pas encore inscrit.e, bénéficiez de 5 Bb's offerts pour tester gratuitement</p>
+                                    <div className="card-title d-flex flex-row justify-content-between">
+                                        <Link className="nav-link btn btn-warning" to="/auth/connexion" >
+                                                    Je me connecte
+                                        </Link>
+                                        <p>OU</p>
+                                        <Link className="nav-link btn btn-warning" to="/auth/inscription" >
+                                                    Je m'inscris
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>    
-                        </Form>
+                        ) : (
+                            <Form onSubmit={handleSubmit} ref={form}>
+                                <div className="card ">
+                                    <div className="card-body">
+                                        <div className="card-title d-flex flex-row justify-content-center">
+                                            <div className="p-2">Je souhaite acheter :</div>
+                                            <div className="p-2"><Input className="form-control form-control-inline" type="text" value={quantity} onChange={handleChange} /></div>
+                                            <div className="p-2"> Bbs</div>
+                                        </div>
+                                        <p className="card-text">Pour un montant de : <span>{(valueBbs*quantity).toFixed(2)}</span> €</p>
+                                        <Input role="link" className="nav-link btn btn-warning w-100" type="submit" value="J'achète des Bb's"/>
+                                    </div>
+                                </div>    
+                            </Form>
+                        )}            
                     </div>
                 </div>
             </div>
