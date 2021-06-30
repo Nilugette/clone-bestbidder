@@ -19,7 +19,6 @@ const BuyBbs = () => {
 
     const account = useSelector(state => state.accountReducer)
     const dispatch = useDispatch();
-    const [completedSuccess, setCompletedSuccess] = useState(false)
     const [valueBbs, setValueBbs] = useState(1) 
     const [quantity, setQuantity] = useState(10)
     const [bbsPrice, setBbsPrice] = useState(BbsPrices.PRICE_UP_TO_FORTY_NINE);
@@ -48,29 +47,6 @@ const BuyBbs = () => {
        
     }
 
-    // const handleClick = async (event) => {
-    //     const stripe = await stripePromise;
-    //     const { error } = await stripe.redirectToCheckout({
-    //             lineItems: [{
-    //                 price: bbsPrice,
-    //                 quantity: parseInt(quantity, 10),
-    //             }],
-    //             mode: 'payment',
-    //             successUrl: 'http://127.0.0.1:3000',
-    //             cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
-    //             customerEmail : account.email
-    //         }).then( res => console.log(res) );
-    
-    //     console.log('toto')
-    //     console.log(stripe)
-    //     if(!error) {
-    //         console.log('caca')
-    //         setCompletedSuccess(true)
-    //     }
-        
-    // }
-
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         const stripe = await stripePromise;
@@ -83,18 +59,14 @@ const BuyBbs = () => {
                 successUrl: 'http://127.0.0.1:3000',
                 cancelUrl: 'http://127.0.0.1/acheter-des-bbs',
                 customerEmail : account.email
-            }).then( res => console.log(res) );
+            })
     
-        console.log('toto')
-        console.log(stripe)
+
         if(!error) {
-            console.log('caca')
             const data = {
-                bb : 56
+                bb : parseInt(quantity, 10)+parseInt(account.bb, 10)
             }
-            console.log(data.bb)
-            dispatch(patchAccount(data))
-           
+            dispatch(patchAccount(data)) 
         }
     }
 
