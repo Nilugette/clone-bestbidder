@@ -9,6 +9,7 @@ import MyAccount from "./pages/MyAccount";
 import Password from "./pages/Password";
 import BuyBbs from "./pages/BuyBbs";
 import Categories from "./pages/Categories";
+import EditCategoriesById from "./pages/EditCategoriesById";
 
 const App = () => {
   return (
@@ -18,12 +19,13 @@ const App = () => {
             <div className="container">
               <Switch>
                   <Route path='/' exact component={Homepage} />
-                  <Route path='/auth/connexion' component={Login} />
-                  <Route path='/auth/inscription' component={Register} />
+                  <Route exact path='/auth/connexion' component={Login} />
+                  <Route exact path='/auth/inscription' component={Register} />
                   <Route path='/mon-compte' component={MyAccount} />
                   <Route path='/changer-mot-de-passe' component={Password} />
                   <Route path='/acheter-des-bbs' component={BuyBbs} />
-                  <Route path='/categories' component={Categories} />
+                  <Route exact path='/categories' component={Categories} />
+                  <Route exact path="/categories/:id" component={EditCategoriesById} />
               </Switch>
             </div>
           <Footer />

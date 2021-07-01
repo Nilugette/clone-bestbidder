@@ -13,7 +13,7 @@ const Categories = () => {
         <h1 className="display-4">Afficher par catégorie</h1>
         <p className="lead">Choisissez uniquement les enchères qui vous intéressent</p>
     </div>
-    <div className="grid-container">{!isEmpty(categories) && categories.map( (category) => <CardCategory key={category.id} image={category.image} title={category.title} />)}</div>
+    <div className="grid-container">{!isEmpty(categories) && categories.map( (category) => <CardCategory key={category.id} id={category.id} image={category.image} title={category.title} />)}</div>
     </>
   );
 }
