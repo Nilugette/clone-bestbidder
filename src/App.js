@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import MyAccount from "./pages/MyAccount";
 import Password from "./pages/Password";
 import BuyBbs from "./pages/BuyBbs";
+import Categories from "./pages/Categories";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
                   <Route path='/mon-compte' component={MyAccount} />
                   <Route path='/changer-mot-de-passe' component={Password} />
                   <Route path='/acheter-des-bbs' component={BuyBbs} />
+                  <Route path='/categories' component={Categories} />
               </Switch>
             </div>
           <Footer />

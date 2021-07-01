@@ -1,7 +1,6 @@
 import React from "react";
 
-const Card = ({ auction, onShow }) => {
-
+const CardAuction = ({ auction, onShow }) => {
 
   return (
       <div className="card" style={{width: "18rem"}}>
@@ -22,4 +21,4 @@ const Card = ({ auction, onShow }) => {
   );
 }
 
-export default Card
+export default CardAuction

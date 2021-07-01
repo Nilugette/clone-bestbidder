@@ -22,7 +22,7 @@ const Footer = () => {
                             }
                             
                             <li className="nav-item">
-                                <Link className="nav-link" to="#">Afficher par catégorie</Link>
+                                <Link className="nav-link" to="/categories">Afficher par catégorie</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/">Toutes les enchères</Link>
