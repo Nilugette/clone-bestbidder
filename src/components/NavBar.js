@@ -57,7 +57,7 @@ const NavBar = () => {
                                 <Link className="nav-link" to="#">CGU, CGV et Mentions légales</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="#">Contactez-nous</Link>
+                                <Link className="nav-link" to="/contactez-nous">Contactez-nous</Link>
                             </li>
                         </ul>
                     </div>

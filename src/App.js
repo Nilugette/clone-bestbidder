@@ -10,6 +10,7 @@ import Password from "./pages/Password";
 import BuyBbs from "./pages/BuyBbs";
 import Categories from "./pages/Categories";
 import EditCategoriesById from "./pages/EditCategoriesById";
+import ContactUs from "./pages/ContactUs";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
                   <Route path='/acheter-des-bbs' component={BuyBbs} />
                   <Route exact path='/categories' component={Categories} />
                   <Route exact path="/categories/:id" component={EditCategoriesById} />
+                  <Route path="/contactez-nous" component={ContactUs} />
               </Switch>
             </div>
           <Footer />
