@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import { patchAccount } from "../redux/account/account.action";
+import { deleteAccount, patchAccount } from "../redux/account/account.action";
 import { logout } from '../redux/authentication/auth.action';
 
 
@@ -23,10 +23,8 @@ const formatDate = (value) => {
     return dateN.getFullYear()+'-' + (dateN.getMonth()+1) + '-'+dateN.getDate();
 }
  
-const MyAccount = () => {
-
+const MyAccount = (props) => {
     const account = useSelector(state => state.accountReducer)
-    
   
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -116,6 +114,17 @@ const MyAccount = () => {
 
     const logOut = () => {
       dispatch(logout());
+    };
+
+    const deleteUserAccount = () => {
+        dispatch(deleteAccount(account.id))
+        .then(() => {
+            dispatch(logout());
+        }).then(()=> {
+            props.history.push("/");
+            window.location.reload();
+        });
+
     };
 
     return (
@@ -315,6 +324,11 @@ const MyAccount = () => {
             </form>
             <br/>
                 <Link className="nav-link btn btn-secondary" to="/auth/connexion"  onClick={logOut}>Se déconnecter</Link>
+            <br/>
+                <div className="jumbotron text-center">
+                    <h3>Supprimez votre compte</h3>
+                </div>
+                <button className="btn btn-secondary" onClick={deleteUserAccount}>Supprimer</button>
         </div>
     );
 };

@@ -9,7 +9,7 @@ const register = (email, nickname, password, phone) => {
     phone: formatPhone(phone),
     optin_email: true,
     optin_sms: true
-  });
+  })
 };
 
 const login = (username, password) => {

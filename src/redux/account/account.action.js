@@ -27,3 +27,17 @@ export const patchAccount = (data) => {
         .catch(err => console.log(err))  
     }
 }
+
+export const deleteAccount = (id) => {
+    return (dispatch) => {
+        return axios({
+            method: "delete",
+            url: API_URL + "account",
+            headers: authHeader()
+        })
+        .then( () => {
+            dispatch({ type: AccountActionTypes.DELETE_ACCOUNT, payload : id})
+        })
+        .catch(err => console.log(err))  
+    }
+}

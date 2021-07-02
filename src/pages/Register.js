@@ -102,7 +102,7 @@ const Register = (props) => {
       dispatch(register(email, nickname, password, phone))
         .then(() => {
           setSuccessful(true);
-          props.history.push("/");
+          props.history.push("/auth/connexion");
           window.location.reload();
         })
         .catch(() => {

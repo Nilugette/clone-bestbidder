@@ -8,6 +8,8 @@ export default function accountReducer(state = initialState, action) {
             return action.payload
         case AccountActionTypes.PATCH_ACCOUNT:
             return {...state,  account: action.payload}
+        case AccountActionTypes.DELETE_ACCOUNT:
+            return state.filter( i => i !== action.payload.id)
         default:
             return state
         
