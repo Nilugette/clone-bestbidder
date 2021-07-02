@@ -1,10 +1,56 @@
 import React from 'react'
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import { postContact } from '../redux/contact/contact.action';
+
+
 
 const ContactUs = () => {
-    const { register, handleSubmit, formState } = useForm();
+
+    const dispatch = useDispatch();
+    
+    const validationSchema = Yup.object().shape({
+        civility: Yup.string()
+            .required('Champs requis'),
+        subject: Yup.string()
+            .required('Champs requis'),
+        email: Yup.string()
+            .required('Champs requis ')
+            .email('Email invalide'),
+        first_name: Yup.string()
+            .required('Champs requis'),
+        last_name: Yup.string()
+            .required('Champs requis'),
+        message: Yup.string()
+            .required('Champs requis')
+            
+    });
+
+    const { register, handleSubmit, formState, reset } = useForm({
+        mode: "onSubmit",
+        resolver: yupResolver(validationSchema),
+        shouldUnregister: true 
+    });
     const { errors } = formState;
-    const onSubmit = data => console.log(data);
+
+    const onSubmit =  (data,e) => {
+            e.preventDefault()
+
+            data = {
+                civility: data.civility,
+                subject: data.subject,
+                email: data.email,
+                last_name: data.last_name,
+                first_name: data.first_name,
+                message: data.message
+            }
+            
+            dispatch(postContact(data))
+            e.target.reset();
+            
+    }
 
     return (
         <>
@@ -85,9 +131,10 @@ const ContactUs = () => {
                             {...register('message')} />
                         <div className="invalid-feedback">{errors.message?.message}</div>
                     </div>
-                
                 </aside>
+                <button type="submit" className="btn btn-warning custom-btn mt-5">Envoyer</button>        
             </form>
+            <p className="text-center my-5"> * Champs obligatoire</p>
         </> 
     )
 }

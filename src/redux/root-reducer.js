@@ -5,6 +5,7 @@ import message from './authentication/message.reducer'
 import accountReducer from './account/account.reducer'
 import buyBbsReducer from './buyBbs/buyBbs.reducer'
 import categoryReducer from './category/category.reducer'
+import contactReducer from "./contact/contact.reducer"
 
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
     message,
     accountReducer,
     buyBbsReducer,
-    categoryReducer
+    categoryReducer,
+    contactReducer
 })
