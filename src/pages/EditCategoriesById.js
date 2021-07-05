@@ -26,6 +26,7 @@ const EditCategoriesById = () => {
                             if(auction.category === id.toString()) {
                                 return <CardAuction key={index} auction={auction} onShow={() => setModalShow(true)}/>  
                             }
+                            return null
                          })
                     } 
                     </div>

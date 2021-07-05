@@ -106,11 +106,15 @@ const MyAccount = (props) => {
             }
             
             dispatch(patchAccount(data))
+            .then(()=> {
+                props.history.push("/");
+                window.location.reload();
+            })
     }
 
     useEffect(() => {
         reset(account);
-      }, [account]);
+      }, [account, reset]);
 
     const logOut = () => {
       dispatch(logout());
@@ -328,7 +332,7 @@ const MyAccount = (props) => {
                 <div className="jumbotron text-center">
                     <h3>Supprimez votre compte</h3>
                 </div>
-                <button className="btn btn-secondary" onClick={deleteUserAccount}>Supprimer</button>
+                <button className="btn btn-secondary w-100" onClick={deleteUserAccount}>Supprimer</button>
         </div>
     );
 };

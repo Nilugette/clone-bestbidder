@@ -28,7 +28,7 @@ const ContactUs = () => {
             
     });
 
-    const { register, handleSubmit, formState, reset } = useForm({
+    const { register, handleSubmit, formState } = useForm({
         mode: "onSubmit",
         resolver: yupResolver(validationSchema),
         shouldUnregister: true 

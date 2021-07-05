@@ -13,9 +13,9 @@ const CardAuction = ({ auction, onShow }) => {
           <p className="card-text">{auction.description}</p>
         </div>
         <ul className="list-group list-group-flush">
-          <li className="list-group-item"><button onClick={onShow}>Enchérir</button></li>
-          <li className="list-group-item"><button>Programmer</button></li>
-          <li className="list-group-item"><button>Acheter</button></li>
+          <li className="list-group-item"><button className="btn btn-warning w-100" onClick={onShow}>Enchérir</button></li>
+          <li className="list-group-item"><button className="btn btn-light w-100">Programmer</button></li>
+          <li className="list-group-item"><button className="btn btn-light w-100">Acheter</button></li>
         </ul>
       </div>
   );
