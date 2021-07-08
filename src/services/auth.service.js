@@ -1,5 +1,5 @@
 import axios from "axios";
-import API_URL from "../api/constant";
+import { API_URL } from "../api/constant";
 
 const register = (email, nickname, password, phone) => {
   return axios.post(API_URL + "register", {

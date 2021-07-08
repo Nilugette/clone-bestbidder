@@ -7,7 +7,6 @@ import { getAccount } from './account/account.action';
 import { getBbs } from './buyBbs/buyBbs.action';
 import { getCategories } from './category/category.action';
 
-
 const middleware = [thunk];
 
 const store = createStore(

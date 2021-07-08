@@ -1,5 +1,5 @@
 import axios from "axios";
-import API_URL from "../api/constant";
+import { API_URL } from "../api/constant";
 import authHeader from "./auth-header";
 
 const getPublicContent = () => {
@@ -12,6 +12,7 @@ const getUserAccount = () => {
 };
 
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
     getUserAccount,
     getPublicContent

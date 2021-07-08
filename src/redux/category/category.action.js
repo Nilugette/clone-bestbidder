@@ -1,5 +1,5 @@
 import axios from 'axios'
-import API_URL from '../../api/constant'
+import { API_URL } from '../../api/constant'
 import CategoryActionTypes from './category.types'
 
 export const getCategories = () => {

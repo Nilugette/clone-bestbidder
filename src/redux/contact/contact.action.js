@@ -1,5 +1,5 @@
 import axios from 'axios'
-import API_URL from '../../api/constant'
+import { API_URL } from '../../api/constant'
 import ContactActionTypes from './contact.types'
 
 export const postContact = (data) => {

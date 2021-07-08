@@ -1,5 +1,5 @@
 import axios from 'axios'
-import API_URL from '../../api/constant'
+import { API_URL } from '../../api/constant'
 import authHeader from '../../services/auth-header'
 import BuyBbsActionTypes from './buyBbs.types'
 
